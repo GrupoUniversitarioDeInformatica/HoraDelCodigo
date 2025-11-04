@@ -1,7 +1,8 @@
 # HoraDelCodigo
 
-> [!NOTE]
+> [!IMPORTANT]
 > Do not edit this README.md file manually, instead use the [add_workshop.py](add_workshop.py) script please.
+>
 > No editéis este fichero README.md manualmente, en su lugar utilizad el script [add_workshop.py](add_workshop.py).
 
 ---
