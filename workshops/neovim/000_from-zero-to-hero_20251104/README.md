@@ -38,6 +38,7 @@ Se explicará:
     - [Roadmap neovim](https://dotfyle.com/neovim/plugins/trending)
     - [Lazyvim](https://github.com/LazyVim/LazyVim)
   - [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig/)
+  - Mason
   - conform
   - Snacks
 - VCS --> GitHub o similar
