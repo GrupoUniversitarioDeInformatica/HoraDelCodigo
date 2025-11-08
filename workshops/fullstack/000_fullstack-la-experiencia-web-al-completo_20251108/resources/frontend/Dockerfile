@@ -10,3 +10,4 @@ RUN npm install
 COPY . .
 
 # El build se ejecuta desde el command del servicio en docker-compose
+RUN sh -c "npm install && npm run build && cp -r dist/* /dist"

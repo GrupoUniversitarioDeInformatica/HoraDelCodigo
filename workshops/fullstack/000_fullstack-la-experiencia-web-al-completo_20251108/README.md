@@ -7,7 +7,13 @@
 
 ## Descripción
 
-Este taller va de...
+Aprende a desarrollar una Aplicación Web entera desde un ejemplo sencillo. Aprenderás las siguientes tecnologías:
+- Python
+- FastAPI
+- JavaScript
+- Vue.js
+- Generadores de clientes automáticos
+- OpenAPI
 
 ## Requisitos
 
