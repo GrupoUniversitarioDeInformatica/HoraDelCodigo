@@ -22,6 +22,7 @@ Se recomienda a los participantes que:
 - Conocimiento sobre Programación Orientada a Objetos
 - Venir con portátil
 - Visual Studio Code instalado
+- Docker instalado
 - (Opcional, pero muy recomendable) Traer instalado Postman
 
 ## Otros detalles
