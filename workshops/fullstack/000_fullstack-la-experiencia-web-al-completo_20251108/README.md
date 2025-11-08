@@ -19,8 +19,11 @@ Aprende a desarrollar una Aplicación Web entera desde un ejemplo sencillo. Apre
 
 Se recomienda a los participantes que:
 
-- ...
+- Conocimiento sobre Programación Orientada a Objetos
+- Venir con portátil
+- Visual Studio Code instalado
+- (Opcional, pero muy recomendable) Traer instalado Postman
 
 ## Otros detalles
 
-Para el que quiera dar este taller, recomiendo que...
+Para el que quiera dar este taller, recomiendo que haya contribuido activamente al desarrollo de la página web del GUI. Las tecnologías usadas allí son las mismas que se imparten en este taller.
