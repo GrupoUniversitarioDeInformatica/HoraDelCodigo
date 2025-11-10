@@ -10,5 +10,7 @@
 ## Tabla de Contenidos
 
 ### 2025
+**Fullstack**
+- [Fullstack la experiencia web al completo](workshops/fullstack/000_fullstack-la-experiencia-web-al-completo_20251108)
 **Neovim**
 - [From zero to hero](workshops/neovim/000_from-zero-to-hero_20251104)
