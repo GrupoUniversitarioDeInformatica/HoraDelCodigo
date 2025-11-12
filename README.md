@@ -12,10 +12,10 @@
 ### 2025
 **Fullstack**
 - [Fullstack la experiencia web al completo](workshops\fullstack\000_fullstack-la-experiencia-web-al-completo_20251108)
-- 
+
 **Linux**
 - [Basicos del uso de una maquina linux](workshops\linux\000_basicos-del-uso-de-una-maquina-linux_20251111)
-- 
+
 **Neovim**
 - [From zero to hero](workshops/neovim/000_from-zero-to-hero_20251104)
 
