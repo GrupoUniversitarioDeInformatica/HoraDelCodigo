@@ -1,6 +1,6 @@
 # Requisitos del taller
 
-- Instalar `bun`:
+## Instalar `bun` (Diapositivas):
 
 <details>
   <summary>Windows</summary>
@@ -16,6 +16,8 @@ powershell -c "irm bun.sh/install.ps1|iex"
 curl -fsSL https://bun.sh/install | bash
   ```
 </details>
+
+## Instalar Docker (Código para el taller):
 
 - Instalar Docker: [Install Docker](https://docs.docker.com/engine/install/)
 - **[Opcional]** Instalar Postman: [Install Postman](https://www.postman.com/downloads/)
