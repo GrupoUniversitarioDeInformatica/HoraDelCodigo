@@ -1,30 +1,25 @@
-# FULLSTACK - FullStack: La experiencia web al completo
+# Requisitos del taller
 
-- Autor: Mangel
-- Fecha de adición: 2025-11-08 11:40:46
+## Instalar `bun` (Diapositivas):
 
----
+<details>
+  <summary>Windows</summary>
+  
+  ```powershell
+powershell -c "irm bun.sh/install.ps1|iex"
+  ```
+</details>
+<details>
+  <summary>Linux / MacOS</summary>
 
-## Descripción
+  ```bash
+curl -fsSL https://bun.sh/install | bash
+  ```
+</details>
 
-Aprende a desarrollar una Aplicación Web entera desde un ejemplo sencillo. Aprenderás las siguientes tecnologías:
-- Python
-- FastAPI
-- JavaScript
-- Vue.js
-- Generadores de clientes automáticos
-- OpenAPI
+## Instalar Docker (Código para el taller):
 
-## Requisitos
+- Instalar Docker: [Install Docker](https://docs.docker.com/engine/install/)
+- **[Opcional]** Instalar Postman: [Install Postman](https://www.postman.com/downloads/)
 
-Se recomienda a los participantes que:
-
-- Conocimiento sobre Programación Orientada a Objetos
-- Venir con portátil
-- Visual Studio Code instalado
-- Docker instalado
-- (Opcional, pero muy recomendable) Traer instalado Postman
-
-## Otros detalles
-
-Para el que quiera dar este taller, recomiendo que haya contribuido activamente al desarrollo de la página web del GUI. Las tecnologías usadas allí son las mismas que se imparten en este taller.
+- El resto de dependencias se instalan dentro de los contenedores Docker
