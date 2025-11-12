@@ -10,6 +10,8 @@
 ## Tabla de Contenidos
 
 ### 2025
+**Python**
+- [Python testing](workshops/python/000_python-testing_20251112)
 **Linux**
 - [Basicos del uso de una maquina linux](workshops/linux/000_basicos-del-uso-de-una-maquina-linux_20251111)
 **Fullstack**
