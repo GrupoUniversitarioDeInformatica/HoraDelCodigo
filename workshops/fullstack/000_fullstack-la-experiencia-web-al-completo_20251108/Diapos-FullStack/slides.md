@@ -318,7 +318,7 @@ from schemas import OutUser # Ahora veremos esto
 )
 async def get_user(
   user_id: Annotated[int, Path(gt=0)],
-  session: Depends(get_db)
+  session: Annotated[Session, Depends(get_db)]
 ):
   db_user = session.query(User).filter(User.id == user_id).first()
   if db_user is None:
@@ -492,7 +492,7 @@ from schemas import PostOut
 )
 async def get_post(
   post_id: int,
-  session: Depends(get_db)
+  session: Annotated[Session, Depends(get_db)]
 ):
   db_post = session.query(Post).filter(Post.id == post_id).first()
   if db_post is None:
@@ -526,7 +526,7 @@ from schemas import PostCreate
 )
 async def create_post(
   post: PostCreate,
-  session: Depends(get_db)
+  session: Annotated[Session, Depends(get_db)]
 ):
   db_post = Post(**post.dict())
   session.add(db_post)
@@ -555,7 +555,7 @@ Por ejemplo, `PUT /posts/14` reemplaza el post con ID 14 con los nuevos datos en
 async def update_post(
   post_id: int,
   updated_post: PostCreate,
-  session: Depends(get_db)
+  session: Annotated[Session, Depends(get_db)]
 ):
   db_post = session.query(Post).filter(Post.id == post_id).first()
   if db_post is None:
@@ -592,7 +592,7 @@ class PostPatch(BaseModel):
 async def patch_post(
   post_id: int,
   post_data: PostPatch,
-  session: Depends(get_db)
+  session: Annotated[Session, Depends(get_db)]
 ):
   db_post = session.query(Post).filter(Post.id == post_id).first()
   if db_post is None:
@@ -623,7 +623,7 @@ Por ejemplo, `DELETE /posts/14` elimina el post con ID 14.
 )
 async def delete_post(
   post_id: int,
-  session: Depends(get_db)
+  session: Annotated[Session, Depends(get_db)]
 ):
   db_post = session.query(Post).filter(Post.id == post_id).first()
   if db_post is None:
@@ -695,7 +695,7 @@ En muchas APIs suele haber determinadas rutas protegidas, de forma que no cualqu
 
 ````md magic-move {lines: true}
 
-```python
+```python {*|6,8,9|*}
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 import jwt  # PyJWT
@@ -706,7 +706,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 SECRET_KEY = "clave_secreta" # mejor guardarlo en .env, para el taller lo omitimos
 ALGORITHM = "HS256"
 ```
-```py
+```py {*|1,3|*}
 def verify_token(token: Annotated[str, Depends(oauth2_scheme)]) -> str:
   try:
     payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
@@ -729,7 +729,7 @@ def verify_token(token: Annotated[str, Depends(oauth2_scheme)]) -> str:
     )
 ```
 
-```py
+```py {*|7|*}
 from datetime import datetime, timedelta
 
 def create_access_token(data: dict):
@@ -740,7 +740,7 @@ def create_access_token(data: dict):
   return token
 ```
 
-```py
+```py {*|2,3|10|12-17|*}
 def get_current_user(
   email: Annotated[str, Depends(verify_token)],
   session: Annotated[Session, Depends(get_db)]
@@ -830,390 +830,681 @@ app.include_router(comments.router)
 
 
 ---
-
-## Estructura de ramas
-
-<v-click>
-
-- **1 única rama principal** (main/master) → siempre estable
-- **No pushear NUNCA directamente a main**
-- **Pull Requests** para todos los cambios
-- **Separar dev y release** si es necesario
-
-</v-click>
-
-<v-click>
-
-## Workflow recomendado
-
-```bash
-git pull origin main          # Actualizar main
-git checkout -b feature/nueva-funcionalidad
-# ... hacer cambios ...
-git add .
-git commit -m "feat: add nueva funcionalidad"
-git push origin feature/nueva-funcionalidad
-# Abrir Pull Request en GitHub/GitLab
-```
-
-</v-click>
-
----
-
-## Conventional Commits
-
-[conventionalcommits.org](https://www.conventionalcommits.org/en/v1.0.0/)
-
-<v-click>
-
-```bash
-feat: nueva funcionalidad
-fix: corregir bug
-docs: actualizar documentación
-style: cambios de formato
-refactor: refactorizar código
-test: añadir tests
-chore: tareas de mantenimiento
-```
-
-</v-click>
-
-<v-click>
-
-## Semantic Versioning
-
-[semver.org](https://semver.org/)
-
-</v-click>
-
-<v-click>
-
-`MAJOR.MINOR.PATCH` → `1.4.2`
-
-- **MAJOR**: Cambios incompatibles
-- **MINOR**: Nueva funcionalidad compatible
-- **PATCH**: Bug fixes compatibles
-
-</v-click>
-
----
-zoom: 0.85
----
-
-# Merge conflicts
-
-Los conflictos ocurren cuando Git no puede fusionar automáticamente los cambios de diferentes ramas.
-
-<v-click>
-
-## ¿Cuándo suceden?
-
-- Dos personas modifican la misma línea de código
-- Una persona elimina un archivo que otra ha modificado
-- Cambios incompatibles en la estructura del proyecto
-
-</v-click>
-
-<v-click>
-
-## Resolución
-
-```bash
-git merge feature-branch
-# CONFLICT (content): Merge conflict in file.txt
-# Automatic merge failed; fix conflicts and then commit the result.
-```
-
-</v-click>
-
-<v-click>
-
-1. Abrir el archivo con conflictos
-2. Buscar las marcas `<<<<<<<`, `=======`, `>>>>>>>`
-3. Decidir qué cambios mantener
-4. Eliminar las marcas de conflicto
-5. `git add` y `git commit`
-
-</v-click>
-
----
-layout: cover
+transition: fade
 level: 2
+zoom: 0.9
 ---
 
-# Resolución forzosa ⚠️☠️
+## Política CORS
 
-<v-click>
-
-```bash
-git reset --hard <branch>
-```
-
-</v-click>
-
----
-layout: two-cols
----
-
-# .gitignore
-
-Un fichero especial que le dice a Git qué archivos o directorios ignorar.
-
-<v-click>
-
-**¿Por qué es importante?**
-
-- Evitar subir archivos temporales
-- No versionar credenciales
-- Ignorar dependencias que se pueden regenerar
-- Mantener el repo limpio
-
-</v-click>
-
-<v-click>
-
-**Sintaxis básica**
-
-```md [.gitignore]
-# Comentarios
-*.log          # Todos los .log
-node_modules/  # Directorio completo
-!important.log # Excepción
-temp*          # Archivos que empiecen por temp
-```
-
-</v-click>
-
-::right::
-
-<v-click>
-
-## Ejemplos comunes
-
-```md [gitignore]
-# Dependencias
-node_modules/
-venv/
-.env
-
-# Archivos del sistema
-.DS_Store
-Thumbs.db
-
-# IDEs
-.vscode/
-.idea/
-*.swp
-
-# Builds
-dist/
-build/
-*.o
-*.exe
-
-# Logs
-*.log
-logs/
-
-# Credenciales
-.env
-config/secrets.json
-```
-
-</v-click>
-
----
-transition: slide-up
-zoom: 0.85
----
-
-# Git Hooks
-
-Scripts que se ejecutan automáticamente en ciertos eventos de Git.
-
-<v-click>
-
-## Tipos principales
-
-<div class="grid grid-cols-2 gap-4">
-<div>
-
-### Client-side
-- `pre-commit`: Antes de cada commit
-- `prepare-commit-msg`: Preparar mensaje
-- `commit-msg`: Validar mensaje
-- `post-commit`: Después del commit
-
-</div>
-<div>
-
-### Server-side
-- `pre-receive`: Antes de recibir push
-- `update`: Por cada rama actualizada
-- `post-receive`: Después del push
-
-</div>
-</div>
-
-</v-click>
-
-<v-click>
-
-## Ejemplo: pre-commit
-
-```bash
-#!/bin/sh
-# .git/hooks/pre-commit
-
-# Ejecutar tests antes de commitear
-npm test
-if [ $? -ne 0 ]; then
-  echo "Tests fallaron. Commit cancelado."
-  exit 1
-fi
-
-# Verificar formato de código
-npm run lint
-```
-
-</v-click>
-
----
-zoom: 0.7
----
-
-# GitOps
-
-<v-click>
-
-## Filosofía de desarrollo
-
-> "Git como única fuente de verdad para la infraestructura y aplicaciones"
-
-[Ejemplo: k8s Ingress](https://kubernetes.io/es/docs/concepts/services-networking/ingress/#el-recurso-ingress)
-
-</v-click>
-
-<v-click>
-
-## Principios clave
-
-</v-click>
+CORS = Cross Origin Resource Sharing
 
 <v-clicks>
 
-- **Declarativo**: Todo se describe en archivos de configuración
-- **Versionado**: Toda la configuración está en Git
-- **Inmutable**: Los cambios se hacen via pull requests
-- **Reconciliación continua**: Herramientas automatizan el despliegue
+- Aparece cuando se hacen peticiones desde otros servidores.
+- La cabecera **Origin** indica la URL desde donde se hace la petición.
+- Nosotros, en el BackEnd, podemos decir desde qué URLs queremos recibir peticiones.
+- Atención: Esta política solo surge efecto si se hace una petición desde un servidor externo. Si nosotros nos comunicamos directamente con nuestra API, la política CORS no tiene efecto alguno.
 
 </v-clicks>
 
 <v-click>
 
-## Herramientas populares
+````md magic-move {lines: true}
+```py
+from fastapi.middleware.cors import CORSMiddleware
 
-- **ArgoCD** / **Flux** (Kubernetes)
-- **Terraform** + **Atlantis**
-- **GitHub Actions** / **GitLab CI**
+app = FastAPI(...)
 
-</v-click>
-
-<v-click>
-
-## Beneficios
-
-✅ Trazabilidad completa  
-✅ Rollbacks fáciles  
-✅ Colaboración via PR  
-✅ Auditoría automática
+app.add_middleware(
+  CORSMiddleware,
+  allow_origins=[
+    "http://localhost:5173",
+    "http://localhost:4173",
+    "https://localhost:8443",
+    "https://localhost"
+  ],
+  allow_methods=['*'],
+  allow_headers=['*'],
+  allow_credentials=True,
+)
+```
+````
 
 </v-click>
 
 ---
 layout: cover
+level: 1
 ---
 
-# Lazygit
-
-Una interfaz de terminal para Git más visual e intuitiva.
+# Desarrollo FrontEnd
 
 ---
 layout: two-cols
-image: https://github.com/jesseduffield/lazygit/raw/master/docs/resources/demo.gif
-backgroundSize: contain
+level: 2
+transition: slide-left
 ---
 
-**Instalación**
+## Reactividad
 
-<v-click>
+- La reactividad es la capacidad de un sistema de cambiar de forma dinámica sin necesidad de actualizar forzosamente una página.
 
-```bash
-brew install lazygit  # macOS
+<br>
 
-sudo apt install lazygit  # Ubuntu/Debian
+<img src="https://imgs.search.brave.com/nrRCx3Hk71NnpsNL34Mv0Ci1to4k2dh5I4fnC1S2FCs/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90aHVt/YnMuZHJlYW1zdGlt/ZS5jb20vYi9hbmd1/bGFyLWxvZ28tZWRp/dG9yaWFsLWlsbHVz/dHJhdGl2ZS13aGl0/ZS1iYWNrZ3JvdW5k/LWFuZ3VsYXItbG9n/by1lZGl0b3JpYWwt/aWxsdXN0cmF0aXZl/LXdoaXRlLWJhY2tn/cm91bmQtZXBzLWRv/d25sb2FkLTIwODMy/OTExOS5qcGc" class="w-50 ml-20">
 
-scoop install lazygit  # Windows
-```
+<br>
 
-</v-click>
-
-<v-click>
-
-**Características principales**
-
-- **Interfaz visual** para el estado del repo
-- **Navegación con teclado** intuitiva
-- **Staging interactivo** de cambios
-- **Resolución visual** de merge conflicts
-- **Historial gráfico** de commits
-- **Gestión de ramas** simplificada
-
-</v-click>
+- Con Vue podremos crear referencias a datos que se actualizan de forma dinámica cuando cambian esos datos.
 
 ::right::
 
+<img src="https://imgs.search.brave.com/SP8815zx7oKRZ0A6Ak3zvOZDSzs_YWn6JJfGAqALOuQ/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9hc3Nl/dHMuc3RpY2twbmcu/Y29tL2ltYWdlcy82/MmE3NGRkMTIyMzM0/M2ZiYzIyMDdkMDAu/cG5n" class="w-50 ml-30" />
+
+<br>
+
+- Crear páginas reactivas sin el uso de *frameworks* es una tarea bastante complicada, por lo que usaremos una librería de **Node** llamada **Vue.js**.
+
+<br>
+
+<img src="https://imgs.search.brave.com/l1RNtSSSLn-gCpmJxG8RnBe_AeKK1sBlnApBK3stHKs/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jZG4u/YnJhbmRmZXRjaC5p/by9pZFQtN2FMQ0Fq/L3RoZW1lL2Rhcmsv/bG9nby5zdmc_Yz0x/YnhpZDY0TXVwN2Fj/emV3U0FZTVgmdD0x/NzQ4Mjg2NzU1NTY3" class="w-40 ml-35">
+
 <v-click>
 
-**Uso básico**
+</v-click>
 
-- Navegación: ↑↓←→, Tab, Enter, Esc
-- Staging: Espacio
-- Commit: c
-- Push: P
+---
+transition: fade
+zoom: 0.7
+level: 2
+---
 
+## HTML + CSS + JavaScript
 
-```bash
-lazygit
+<div class="grid grid-cols-3 mt-3">
+  <div> 
+    <h3 class="text-center underline text-gray-700"> HTML </h3>
+    <h5 class="text-center"> HyperText Markup Language </h5>
+    
+  </div>
+  <div>
+    <h3 class="text-center underline text-gray-700"> CSS </h3>
+    <h5 class="text-center"> Cascade Style Sheets </h5>
+  </div>
+  <div> 
+    <h3 class="text-center underline text-gray-700"> JavaScript </h3>
+    <h5 class="text-center"> No, esto no es Java, es peor </h5>
+  </div>
+</div>
+```html
+<html>
+  <head>
+    <!-- CSS -->
+    <style>
+      .boton {
+        background-color: green;
+        color: white;
+      }
+      .otro-boton {
+        background-color: black;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <button class="boton"> Botón </button>
+    </div>
+    <!-- JavaScript -->
+    <script>
+      let clase = 0;
+      const boton = document.querySelector('.boton');
+      function changeClass() {
+        boton.classList.remove( clase ? 'boton' : 'otro-boton');
+        boton.classList.add( clase ? 'otro-boton': 'boton' );
+        clase = (clase + 1) % 2;
+      }
+      boton.addEventListener('click', changeClass);
+    </script>
+  </body>
+</html>
+```
+
+---
+transition: fade
+level: 2
+---
+
+## TailwindCSS
+**TailwindCSS** es una librería de Node, que trae incluído un surtido extremadamente variado de estilos. En resumen, se podrán diseñar y construir páginas web. No tendremos que diseñar ni un solo estilo, Tailwind nos da una serie de clases pre-hechas para usar en el momento.
+
+Varios ejemplos de clases de tailwind:
+<v-clicks>
+
+- <div class="text-red-500"> text-red-500 </div>
+- <div class="text-4xl"> text-4xl </div>
+- <div class="border rounded-lg text-center border-green-300"> border rounded-lg text-center border-green-300</div>
+- <div class="hover:border rounded-lg text-center hover:text-gray-400 border-blue-400 transition-all duration-150"> hover:border rounded-lg text-center hover:text-gray-400 border-blue-400 transition-all duration-150 </div>
+- <div class="bg-gradient-to-tr from-fuchsia-500 to-cyan-500 bg-clip-text text-transparent"> bg-gradient-to-tr from-cyan-300 to-blue-700 bg-clip-text text-transparent </div>
+
+</v-clicks>
+
+<v-click>
+
+Enlace a un generador de gradientes para Tailwind: [Tailwind Generator](https://www.creative-tim.com/twcomponents/gradient-generator)
+
+</v-click>
+
+---
+level: 2
+transition: slide-left
+---
+
+# Vue.js
+
+### Reactividad en Vue
+
+Para implementar la reactividad en Vue, habitualmente se usa una función llamada `ref`. Esto crea una referencia a un wrapper de datos (un envoltorio sobre un tipo concreto), que, al actualizar el dato internamente, lanza una actualización a la vista para que la interfaz cambie visualmente.
+
+Ejemplo:
+
+```vue
+<template>
+  <button @click="contador++"> {{ contador }} </button>
+  <!-- Si cambia internamente la variable contador, el texto {{ contador }} se actualiza dinámicamente -->
+</template>
+<script>
+import { ref } from 'vue';
+const contador = ref(0);
+</script>
+```
+
+---
+level: 2
+transition: fade
+---
+
+# Distintos métodos reactivos en Vue
+
+<v-click>
+
+- `ref`: Referencia dinámica a un objeto.
+
+</v-click>
+<v-click>
+
+- `computed`: Cada vez que se usa esta variable, se calcula el contenido mediante una función. Ejemplo:
+```js
+const computado = computed(() => x + 5); // suponiendo que x es una variable externa.
+```
+</v-click>
+
+<v-click>
+
+- `reactive`: Se aplica a un objeto. Aplica internamente `ref` a los atributos del objeto.
+
+</v-click>
+
+<v-click>
+<br>
+
+### Funciones adicionales reactivas
+- `watch`: Observa cambios en una variable y ejecuta una rutina personalizada al cambiar. Ejemplo:
+```js
+import { ref, watch } from 'vue';
+
+const x = ref(0);
+watch(
+  x,
+  () => {
+    console.log(`x (${x.value}) ha cambiado de valor`)
+  }
+)
+```
+</v-click>
+
+---
+level: 2
+transition: fade
+zoom: 1.1
+---
+
+# Vistas y componentes
+
+En Vue existen dos principales conceptos agrupados alrededor de la misma idea: **Componentes**.
+
+Un componente es una abstracción reutilizable de código HTML + Vue. 
+Es decir, que los componentes pueden estar formados de código HTML y Vue. 
+Cualquier fichero `.vue` puede ser tratado como un componente individual. Ejemplo:
+
+::code-group
+```vue [ContadorNumero.vue]
+<script setup>
+import { ref } from 'vue';
+const contador = ref(0);
+</script>
+<template>
+  <button @click="contador++"> {{ contador }} </button>
+</template>
+```
+```vue [App.vue]
+<script setup>
+import ContadorNumero from './ContadorNumero.vue';
+</script>
+<template>
+  <h1> Ejemplo de contador </h1>
+  <ContadorNumero /> <!-- Inserta el componente en la vista -->
+</template>
+```
+::
+
+<v-click>
+<br>
+
+Habitualmente se separan en dos grupos: **Componentes** y **Vistas**.
+
+</v-click>
+
+---
+level: 2
+transition: fade
+zoom: 1
+---
+
+# Componentes
+
+Generalmente, los componentes reciben parámetros. Podríamos compararlos con las clases en programación orientada a objetos, como si fuesen el constructor de la clase. A este constructor se le llaman `props` (propiedades).
+
+<v-click>
+
+```vue {*}{maxHeight:'350px'}
+<!-- PresentationCard.vue -->
+<script setup>
+const props = defineProps({
+  name: { type: String, required: true },
+  description: { type: String, required: false }.
+  hobbies: { type: String[], required: false, default: () => [] }
+});
+</script>
+<template>
+  <div class="max-w-md mx-auto bg-white rounded-2xl shadow-md p-6 border border-gray-100">
+    <h2 class="text-2xl font-bold text-gray-800 mb-2">{{ name }}</h2>
+    <p v-if="description" class="text-gray-600 mb-4">
+      {{ description }}
+    </p>
+    <div v-if="hobbies.length" class="mt-4">
+      <h3 class="text-lg font-semibold text-gray-700 mb-2">Hobbies</h3>
+      <ul class="flex flex-wrap gap-2">
+        <li 
+          v-for="(hobby, index) in hobbies" 
+          :key="index" 
+          class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm"
+        >
+          {{ hobby }}
+        </li>
+      </ul>
+    </div>
+    <div v-else class="text-gray-400 italic mt-4">
+      No hobbies listed.
+    </div>
+  </div>
+</template>
 ```
 
 </v-click>
 
 ---
-layout: center
-class: text-center
+level: 2
+transition: fade
 ---
 
-# ¡Gracias por asistir!
+# Vistas
 
-<div class="pt-12">
-  <span @click="$slidev.nav.next" class="px-2 py-1 rounded cursor-pointer" hover="bg-white bg-opacity-10">
-    ¿Preguntas? 🤔
-  </span>
-</div>
+En Vue, una vista es un componente con un comportamiento ligeramente distinto.
 
-<div class="pt-12">
+Se programan de la misma manera que los componentes. Las vistas también pueden recibir `props`.
 
-## Recursos útiles
+La diferencia es que no se usan colocando la vista en el código como los componentes. Ejemplo:
+````md magic-move {lines: true}
+::code-group
+```vue 
+<!-- App.vue, uso de componentes -->
+<script setup>
+import MiComponente from './MiComponente.vue';
+</script>
+<template>
+  <MiComponente />
+</template>
+```
+```vue
+<!-- App.vue, uso de vistas -->
+<script setup>
+</script>
+<template>
+  <router-view /> <!-- Componente especial de Vue -->
+</template> 
+```
+````
 
-[📖 Pro Git Book](https://git-scm.com/book) • [🎮 Learn Git Branching](https://learngitbranching.js.org/) • [📚 Atlassian Git Tutorials](https://www.atlassian.com/git/tutorials)
+<v-click>
 
-</div>
+Vue analiza la **URL** del navegador y muestra la vista correspondiente a esa URL.
 
-<div class="abs-br m-6 flex gap-2">
-  <a href="https://github.com/jorgegomzar" target="_blank" alt="GitHub" title="GitHub"
-    class="text-xl slidev-icon-btn opacity-50 !border-none !hover:text-white">
-    <carbon-logo-github />
-  </a>
-</div>
+Para que Vue reconozca las rutas hay que usar una libreria complementaria llamada `vue-router`.
 
+</v-click>
+
+
+---
+level: 2
+transition: fade
+zoom: 0.92
+---
+
+# Vue Router
+
+Para definir el router, hay que seguir un esquema muy sencillo:
+
+```js
+// ./router/index.js
+import HomePage from '@/views/HomePage.vue'
+const routes = [{
+    path: '/',
+    name: 'home',
+    component: HomePage,
+    meta: { requiresAuth: false, guestOnly: false },
+    children: []
+  },
+  {
+    path: '/users',
+    name: 'users',
+    component: () => import('@/views/UsersPage.vue'), // forma alternativa
+    meta: { requiresAuth: true, guestOnly: false },
+    children: [
+      {
+        path: ':userId', // parámetro, para entrar en /users/15, por ejemplo
+        name: 'singleUser',
+        component: () => import('@/views/SingleUserPage.vue'),
+        meta: { requiresAuth: false, guestOnly: false },
+        children: []
+      }
+    ]
+  }
+]
+```
+
+---
+level: 2
+transition: fade
+---
+
+# Router Link
+
+Para enrutar las distintas vistas, se puede usar otro componente especial de Vue llamado `<RouterLink>` Ejemplo:
+
+```vue
+<script setup>
+
+</script>
+<template>
+  <RouterLink :to="{name: 'users'}" > <!-- Enruta en base a la propiedad `name` del router -->
+    Usuarios
+  </RouterLink>
+
+  <router-view /> <!-- Al darle al enlace de arriba, este componente se sustituirá por la vista `UsersPage`-->
+</template>
+```
+
+---
+level: 2
+transition: fade
+---
+
+# Emits: Eventos customizados para componentes
+Los emits sirven para que un componente envíe, o exponga eventos personalizados al componente que lo usa. 
+
+El componente en cuestión define un `emit('nombre', parametros)` y el padre (el que usa al otro componente) llama al evento mediante `@nombre=f(parametros)`.
+
+::code-group
+```vue [Hijo.vue]
+<script setup>
+import { defineEmits } from 'vue';
+
+const emit = defineEmits(['pepe']);
+
+function notify() {
+  emit('pepe', 'un mensaje');
+}
+</script>
+<template>
+  <button @click="notify"> Emitir Evento </button>
+</template>
+```
+
+```vue [Padre.vue]
+<script setup>
+import Hijo from './Hijo.vue';
+</script>
+<template>
+  <Hijo @pepe="(msg) => console.log(msg)" />
+</template>
+```
+::
+
+<v-click>
+
+Al hacer click al botón en el componente del Hijo, el Padre imprimirá por pantalla el mensaje que le pasa el hijo. Es una forma de obtener datos que se encuentran en componentes inferiores y recuperarlos en los padres.
+
+</v-click>
+
+---
+level: 2
+transition: fade
+---
+
+# Atributos personalizados de Vue
+
+Vue añade nuevos atributos a cada etiqueta de HTML. Vamos a dar un repaso a todos ellos. **Nota**: muchas de las siguientes directivas solo se pueden usar con variables reactivas (`ref`, `computed`, `reactive`).
+
+<v-clicks>
+
+- `v-if`: La etiqueta se renderiza bajo una condición. Ejemplo: `<p v-if="error"> {{ error }} </p>`
+- `v-else-if`: De forma similar, pero necesita previamente un `v-if`.
+- `v-else`: La última alternativa para condicionales, se renderiza si ninguna de las anteriores condiciones se cumple.
+
+</v-clicks>
+<v-click>
+
+- `v-for`: Itera sobre una lista, pudiendo usar sus contenidos dentro:
+
+```vue
+<!-- Crea una lista no ordenada con todos los elementos del array `items` -->
+<ul>
+  <li v-for="(item, idx) in items" :key="idx"> {{ item }} </li>
+</ul>
+```
+</v-click>
+
+---
+level: 2
+transition: fade
+---
+
+# Modificadores de atributos
+
+Vue permite alterar el comportamiento de los atributos HTML mediante las siguientes extensiones:
+
+<v-click>
+
+- `v-model="variable_reactiva"`: Habitualmente usada en las etiquetas de tipo `<input>` o `<button>`, en general aquellas que reciben entradas de usuarios. Al cambiar el valor del input también se cambia el valor de la variable de forma automática. Es como asignar la variable a ese input en concreto.
+````md magic-move {lines: true}
+```vue 
+<script setup>
+import { ref, watch } from 'vue';
+const edad = ref(18);
+
+watch(
+  edad,
+  () => console.log(`Edad ha cambiado: ${edad.value}`),
+);
+</script>
+<template>
+  <label class="flex flex-row">
+    <p> Introduce tu edad </p>
+    <input type="number" v-model="edad">
+  </label>
+</template>
+```
+````
+
+</v-click>
+
+---
+transition: fade
+---
+
+- `:atributo`: Permite introducir variables reactivas dentro del valor del atributo HTML. Por ejemplo, si implementamos un modo claro y un modo oscuro:
+
+<v-click>
+
+````md magic-move {lines: true}
+```vue
+<script setup>
+import { ref } from 'vue';
+const modoOscuro = ref(false);
+</script>
+<template>
+  <button @click="modoOscuro = !modoOscuro"> Cambiar Aspecto </button>
+  <div class="container w-30 h-30 rounded-lg" 
+    :class="modoOscuro ? 'bg-gray-950 text-white' : 'bg-gray-50 text-black'"
+  > Contenido ... </div>
+</template>
+```
+````
+</v-click>
+
+<v-click>
+
+- `v-html`:  **ATENCIÓN**: Permite renderizar código HTML con el contenido de una variable reactiva. Muy versátil, pero al mismo tiempo **muy** peligroso. ¿Qué pasaría si alguien introduce una etiqueta `<script>` dentro del HTML y accede a nuestros recursos? Es una forma de ciberataque! Si se usa esta etiqueta, que sea de forma controlada y nunca permitir que los usuarios puedan acceder a este tipo de atributos de Vue.
+
+</v-click>
+
+---
+transition: fade
+---
+
+- `@evento`: Asigna una función o línea de código a un evento en concreto. En las anteriores diapositivas ya se han mostrado ejemplos sobre cómo funciona este modificador.
+
+<v-click>
+
+- `{{ variable_dinamica }}`: Permite introducir de forma dinámica referencias en el código. Se puede ver en el ejemplo del `v-for`.
+
+</v-click>
+
+---
+transition: fade
+level: 2
+---
+
+# Funciones especiales de Vue
+
+Vue tiene ciertas funciones especiales que permiten ejecutar código antes de la creación de un componente, y tras la destrucción de un componente: `onMounted` y `onUnmounted`.
+
+- `onMounted`: Ejecuta una función en el momento en el que el componente se cargue en la página web. Por ejemplo, si esa vista en concreto depende del Backend por un dato, que lance la petición en el momento en el que se cargue el componente. Ejemplo:
+
+<v-click>
+```vue {*|14-16|19|*}{maxHeight:'280px'}
+<script setup>
+import { ref, onMounted } from 'vue';
+import { useXController } from '@/composables';
+import XCard from '@/components'
+
+const props = defineProps({
+  id: { type: Number, required: true }
+});
+
+const { getX } = useEventsController();
+
+const x = ref(undefined);
+
+onMounted(async () => {
+  x.value = await getX(props.id); // cargamos el dato
+})
+</script>
+<template>
+  <XCard :x="x" />
+</template>
+```
+
+
+</v-click>
+
+---
+transition: fade
+---
+
+- `onUnmounted`: Lo mismo, pero en el momento de destrucción del componente. Por ejemplo, guardar el estado tras cerrar una ventana:
+
+```vue {*}
+<script setup>
+import { onUnmounted } from 'vue';
+import { useLocalStore } from '@/stores'
+// esta función no existe, es solo un ejemplo
+const { saveChanges } = useLocalStore();
+onUnmounted(() => {
+  saveChanges(); // al destruir el componente, guarda los cambios de forma local
+})
+</script>
+<template>
+  <div> ... </div>
+</template>
+```
+
+---
+transition: fade
+level: 2
+---
+
+# Generadores de clientes a partir de OpenAPI
+
+Para evitar tener que programar manualmente las peticiones HTTP, podemos generar un cliente que coja la documentación OpenAPI descrita en el Backend.
+
+<v-click>
+
+```sh
+# instala el generador de clientes
+npm install @openapitools/openapi-generator-cli -g # -g de forma global
+
+# usa una versión específica de la librería
+openapi-generator-cli version-manager set 7.15.0
+
+# genera el cliente a partir de la documentación creada en el backend
+openapi-generator-cli generate -i https://localhost:8443/openapi.json -g javascript -o /src/api
+
+```
+
+</v-click>
+
+<v-click>
+
+Podeis ver todos los generadores distintos en esta página: [Generadores OpenAPI](https://openapi-generator.tech/docs/generators)
+
+También existen generadores para BackEnd, aunque esos ya no los necesitamos ;)
+
+</v-click>
+
+---
+level: 1
+transition: fade
+layout: end
+---
+
+
+# Fin
+
+## Espero que os haya gustado!
+
+### [Nuestro GitHub](https://github.com/GrupoUniversitarioDeInformatica)
+
+### [Enlace al Repo](https://github.com/GrupoUniversitarioDeInformatica/HoraDelCodigo)
