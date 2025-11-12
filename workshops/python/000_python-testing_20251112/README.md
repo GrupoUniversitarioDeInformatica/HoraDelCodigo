@@ -7,7 +7,7 @@
 
 ## Descripción
 
-Este taller va de aprender a escribir tests para código en Python, los diferentes tipos de tests que existen y las librerías más populares y frecuentes para trastear código antes de que toque producción.
+Este taller va de aprender a escribir tests para código en Python, los diferentes tipos de tests que existen y las librerías más populares y frecuentes para testear código antes de que toque producción.
 
 - Librerías
   - unittest
