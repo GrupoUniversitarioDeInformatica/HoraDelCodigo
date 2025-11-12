@@ -106,7 +106,7 @@ def _generate_root_readme_md() -> None:
             for topic, workshops in workshops_by_topic.items():
                 lines.append(f"**{topic.capitalize()}**")
                 for workshop_name, workshop_path in workshops:
-                    lines.append(f"- [{workshop_name}]({workshop_path})")
+                    lines.append(f"- [{workshop_name}]({workshop_path})\n")
             f.write("\n" + "\n".join(lines))
 
 
