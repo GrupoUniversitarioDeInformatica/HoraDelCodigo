@@ -3,7 +3,7 @@
 > [!IMPORTANT]
 > Do not edit this README.md file manually, instead use the [add_workshop.py](add_workshop.py) script please.
 >
-> No editéis este fichero README.md manualmente, en su lugar utilizad el script [add_workshop.py](add_workshop.py).
+> No editï¿½is este fichero README.md manualmente, en su lugar utilizad el script [add_workshop.py](add_workshop.py).
 
 ---
 
@@ -14,7 +14,7 @@
 - [Fullstack la experiencia web al completo](workshops\fullstack\000_fullstack-la-experiencia-web-al-completo_20251108)
 
 **Java**
-- [Introducci n a java](workshops\java\000_introducci-n-a-java_20251113)
+- [Introduccion a java](workshops\java\000_introduccion-a-java_20251113)
 
 **Linux**
 - [Basicos del uso de una maquina linux](workshops\linux\000_basicos-del-uso-de-una-maquina-linux_20251111)
