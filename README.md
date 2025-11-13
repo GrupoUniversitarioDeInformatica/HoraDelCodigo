@@ -13,6 +13,9 @@
 **Fullstack**
 - [Fullstack la experiencia web al completo](workshops\fullstack\000_fullstack-la-experiencia-web-al-completo_20251108)
 
+**Java**
+- [Introducci n a java](workshops\java\000_introducci-n-a-java_20251113)
+
 **Linux**
 - [Basicos del uso de una maquina linux](workshops\linux\000_basicos-del-uso-de-una-maquina-linux_20251111)
 
