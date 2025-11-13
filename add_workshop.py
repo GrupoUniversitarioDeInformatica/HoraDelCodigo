@@ -7,6 +7,7 @@ and will update the README.md on the root of this repo to display a tidy Table o
 
 import argparse
 import re
+import unicodedata
 from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
@@ -15,7 +16,11 @@ workshops_dir = Path(__file__).parent / "workshops"
 
 
 def _clean_string(string: str) -> str:
-    string = re.sub(r"[^A-Za-z0-9\'\-]", "-", string.replace(" ", "_").lower())
+    string = unicodedata.normalize("NFKD", string)
+    string = "".join(c for c in string if not unicodedata.combining(c))
+
+    string = re.sub(r"[^a-z0-9'\-]", "-", string.replace(" ", "_").lower())
+
     return re.sub(r"-+", "-", string).strip("-") or "-"
 
 
