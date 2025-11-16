@@ -1,20 +1,35 @@
-# JAVA - Introducci髇 a Java
+# JAVA - Introducci锟絥 a Java
 
 - Autor: Nessi
-- Fecha de adici髇: 2025-11-13 14:19:21
+- Fecha de adici贸n: 2025-11-13 14:19:21
 
 ---
 
-## Descripci髇
+## Descripci贸n
 
-Este taller va de...
+Este es el repositorio oficial del taller introductorio a Java de la Hora del C贸digo de 2025.
+
+Este taller est谩 orientado a principiantes dentro del mundo de la inform谩tica que est茅n interesados en aprender como primer o segundo lenguaje *Java*.
+
+En la sesi贸n de 2 horas que se imparte aprender谩s:
+
+- **Sintaxis b谩sica de Java**: Variables, tipos de datos y operadores.
+- **Estructuras de control**: Condicionales `if-else` y bucles `while do-while for`.
+- **Funciones y procedimientos**: Reutiliza c贸digo y aprende a modular tu programa.
 
 ## Requisitos
 
 Se recomienda a los participantes que:
 
-- ...
+- No es necesario que tengan experiencia en programaci贸n ni inform谩tica.
+- Tener instalado un IDE de desarrollo (Visual Studio Code, Netbeans, Eclipse, Intellij IDEA, etc...)
+- Entorno de ejecuci贸n de Java (JRE) y sus herramientas para el desarrollo (JDK 11)
 
 ## Otros detalles
 
-Para el que quiera dar este taller, recomiendo que...
+Para el que quiera dar este taller, recomiendo:
+
+- Tenga una base s贸lida en Java
+- Haber aprobado Fundamentos de Programaci贸n (o equivalentes en otros grados)
+- Tenga capacidad para explicar conceptos complejos de forma sencilla
+- Sepa tratar con principiantes y grupos voluminosos.
