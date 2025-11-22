@@ -70,3 +70,39 @@ Para el que quiera dar este taller, recomiendo que:
 - [Lazyvim](https://www.lazyvim.org/)
 - [Mi neovim-config](https://github.com/jorgegomzar/nvim-config)
 
+### FAQ
+
+#### ¿Qué diferencias tiene neovim respecto a vim?
+
+1. Tiene un núcleo moderno y asíncrono
+2. Usa Lua de forma nativa, permitiendo plugins más rápidos y potentes
+3. Trae LSP y Tree-sitter integrados
+4. Tiene un ecosistema de plugins moderno y activo
+5. Es más fácil de extender y más fluido para trabajar
+
+Vim sigue siendo excelente, pero es más conservador y limitado internamente.
+
+#### ¿Qué es LSP (Language Server Protocol)?
+
+Un estándar para que el editor hable con un *servidor de lenguaje* (Python, Rust, TS…).
+
+Proporciona autocompletado inteligente, ir a definición, renombrar símbolos, diagnósticos, etc., igual que VSCode.
+
+#### ¿Qué es Tree-sitter?
+
+Un parser moderno que entiende la sintaxis real del código (no solo regex), mediante AST.
+
+Permite coloreado más preciso, mejor indentación, folding inteligente y análisis estructural del archivo.
+
+#### ¿Qué es LazyVim?
+
+Una configuración prearmada de Neovim basada en el plugin manager **lazy.nvim**.
+
+Incluye un ecosistema de plugins ya listos (LSP, treesitter, telescope, UI moderna…) para tener un editor completo sin configurarlo tú desde cero.
+
+#### ¿Qué es mason.nvim?
+
+**mason.nvim** es un gestor de paquetes para Neovim que instala y administra herramientas externas como **LSP servers**, **linters**, **formatters** y **DAP**.
+
+Simplifica el proceso de instalarlos (sin usar npm, pip, brew, etc.) y los integra fácilmente con plugins como `lspconfig` o `null-ls`.
+
